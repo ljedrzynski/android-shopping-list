@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import pl.devone.shoppinglist.fragments.ShoppingItemListFragment;
+import pl.devone.shoppinglist.fragments.dummy.DummyContent;
+
+public class MainActivity extends AppCompatActivity implements ShoppingItemListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +52,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }
