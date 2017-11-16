@@ -1,4 +1,4 @@
-package pl.devone.shoppinglist;
+package pl.devone.shoppinglist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import pl.devone.shoppinglist.fragments.ShoppingItemListFragment;
+import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent;
 import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
 
 public class MainActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {

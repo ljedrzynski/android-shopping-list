@@ -1,4 +1,4 @@
-package pl.devone.shoppinglist;
+package pl.devone.shoppinglist.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
