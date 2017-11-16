@@ -11,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import pl.devone.shoppinglist.fragments.ShoppingItemListFragment;
+import pl.devone.shoppinglist.fragments.ShoppingListFragment;
 import pl.devone.shoppinglist.fragments.dummy.DummyContent;
+import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
 
-public class MainActivity extends AppCompatActivity implements ShoppingItemListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingItemListF
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(ShoppingListContent.ShoppingList item) {
 
     }
 }

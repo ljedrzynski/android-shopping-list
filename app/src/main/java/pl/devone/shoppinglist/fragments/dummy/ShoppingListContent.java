@@ -12,18 +12,18 @@ import java.util.Map;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class ShoppingListContent {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<ShoppingItem> ITEMS = new ArrayList<ShoppingItem>();
+    public static final List<ShoppingList> ITEMS = new ArrayList<ShoppingList>();
 
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, ShoppingItem> ITEM_MAP = new HashMap<String, ShoppingItem>();
+    public static final Map<String, ShoppingList> ITEM_MAP = new HashMap<String, ShoppingList>();
 
     private static final int COUNT = 25;
 
@@ -34,13 +34,13 @@ public class DummyContent {
         }
     }
 
-    private static void addItem(ShoppingItem item) {
+    private static void addItem(ShoppingList item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static ShoppingItem createDummyItem(int position) {
-        return new ShoppingItem(String.valueOf(position), "Item " + position, 1, 1, true);
+    private static ShoppingList createDummyItem(int position) {
+        return new ShoppingList(String.valueOf(position), new Date(), new ArrayList<ShoppingList>());
     }
 
     private static String makeDetails(int position) {
@@ -52,52 +52,41 @@ public class DummyContent {
         return builder.toString();
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
-    public static class ShoppingItem {
-        private final String id;
-        private final String name;
-        private final int quantity;
-        private final double price;
-        private final boolean isDone;
 
-        public ShoppingItem(String id, String name, int quantity, double price, boolean isDone) {
+    public static class ShoppingList {
+        private final String id;
+        private final Date startDate;
+        private List<ShoppingList> ShoppingLists;
+
+        public ShoppingList(String id, Date startDate, List<ShoppingList> ShoppingLists) {
             this.id = id;
-            this.name = name;
-            this.quantity = quantity;
-            this.price = price;
-            this.isDone = isDone;
+            this.startDate = startDate;
+            this.ShoppingLists = ShoppingLists;
         }
 
         public String getId() {
             return id;
         }
 
-        public String getName() {
-            return name;
+        public Date getStartDate() {
+            return startDate;
         }
 
-        public int getQuantity() {
-            return quantity;
+        public List<ShoppingList> getShoppingLists() {
+            return ShoppingLists;
         }
 
-        public double getPrice() {
-            return price;
+        public void setShoppingLists(List<ShoppingList> ShoppingLists) {
+            this.ShoppingLists = ShoppingLists;
         }
 
-        public boolean isDone() {
-            return isDone;
-        }
 
         @Override
         public String toString() {
-            return "ShoppingItem{" +
+            return "ShoppingList{" +
                     "id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", quantity='" + quantity + '\'' +
-                    ", price='" + price + '\'' +
-                    ", isDone=" + isDone +
+                    ", startDate=" + startDate +
+                    ", ShoppingLists=" + ShoppingLists +
                     '}';
         }
     }

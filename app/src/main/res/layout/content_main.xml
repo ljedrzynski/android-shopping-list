@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/shopping_list_fragment"
-        android:name="pl.devone.shoppinglist.fragments.ShoppingItemListFragment"
+        android:name="pl.devone.shoppinglist.fragments.ShoppingListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

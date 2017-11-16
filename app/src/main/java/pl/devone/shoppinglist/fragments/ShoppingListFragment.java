@@ -11,8 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import pl.devone.shoppinglist.R;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingItem;
+import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
 
 /**
  * A fragment representing a list of Items.
@@ -20,7 +19,7 @@ import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ShoppingItemListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -32,13 +31,13 @@ public class ShoppingItemListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ShoppingItemListFragment() {
+    public ShoppingListFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ShoppingItemListFragment newInstance(int columnCount) {
-        ShoppingItemListFragment fragment = new ShoppingItemListFragment();
+    public static ShoppingListFragment newInstance(int columnCount) {
+        ShoppingListFragment fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -68,7 +67,7 @@ public class ShoppingItemListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(ShoppingListContent.ITEMS, mListener));
         }
         return view;
     }
@@ -103,6 +102,6 @@ public class ShoppingItemListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(ShoppingItem item);
+        void onListFragmentInteraction(ShoppingListContent.ShoppingList item);
     }
 }
