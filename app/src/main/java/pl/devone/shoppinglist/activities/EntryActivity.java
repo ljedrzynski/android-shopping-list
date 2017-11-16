@@ -14,7 +14,7 @@ import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
 import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
 
-public class MainActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {
+public class EntryActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
