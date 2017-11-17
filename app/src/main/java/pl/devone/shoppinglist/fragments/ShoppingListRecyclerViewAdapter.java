@@ -10,11 +10,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.devone.shoppinglist.R;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingItem;
+import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingListItem;
 import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link ShoppingItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link ShoppingListItem} and makes a call to the
  * specified {@link ShoppingListFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */

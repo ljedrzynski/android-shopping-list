@@ -9,10 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.util.List;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.dummy.DummyContent;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingItem;
+import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingListItem;
 
 /**
  * A fragment representing a list of Items.
@@ -20,25 +23,27 @@ import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ShoppingItemListFragment extends Fragment {
+public class ShoppingListItemFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private RecyclerView mRecyclerView;
+    private List<DummyContent.ShoppingListItem> mShoppingListItems = DummyContent.ITEMS;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ShoppingItemListFragment() {
+    public ShoppingListItemFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ShoppingItemListFragment newInstance(int columnCount) {
-        ShoppingItemListFragment fragment = new ShoppingItemListFragment();
+    public static ShoppingListItemFragment newInstance(int columnCount) {
+        ShoppingListItemFragment fragment = new ShoppingListItemFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -68,10 +73,32 @@ public class ShoppingItemListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingListItems, mListener));
+            recyclerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(ShoppingListItemFragment.this.getContext(), "ttt", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            mRecyclerView = recyclerView;
         }
         return view;
     }
+
+    public void addEmptyItem() {
+        ShoppingListItem shoppingListItem = new ShoppingListItem();
+        shoppingListItem.setId(mShoppingListItems.size()  + 1);
+        mShoppingListItems.add(shoppingListItem);
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+//    public void saveNewItems() {
+//        for (ShoppingListItem shoppingListItem : mShoppingListItems) {
+//            shoppingListItem.setReadonly(true);
+//        }
+//        mRecyclerView.getAdapter().notifyDataSetChanged();
+//    }
 
 
     @Override
@@ -91,6 +118,7 @@ public class ShoppingItemListFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -103,6 +131,6 @@ public class ShoppingItemListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(ShoppingItem item);
+        void onListFragmentInteraction(ShoppingListItem item);
     }
 }

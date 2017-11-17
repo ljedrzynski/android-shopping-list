@@ -5,43 +5,73 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/cb_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:width="30dp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
     <TextView
         android:id="@+id/tv_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="30dp"
         android:layout_margin="@dimen/text_margin"
+        android:width="30dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="120dp"
         android:layout_margin="@dimen/text_margin"
+        android:width="120dp"
         android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:width="120dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="30dp"
         android:layout_margin="@dimen/text_margin"
+        android:width="30dp"
         android:textAppearance="?attr/textAppearanceListItem" />
+
+    <EditText
+        android:id="@+id/np_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:width="30dp"
+        android:inputType="numberDecimal"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="30dp"
         android:layout_margin="@dimen/text_margin"
+        android:width="30dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
-    <CheckBox
-        android:id="@+id/cb_done"
+    <EditText
+        android:id="@+id/np_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="30dp"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:width="30dp"
+        android:inputType="number"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone" />
 </LinearLayout>

@@ -25,7 +25,7 @@ public class ShoppingListContent {
      */
     public static final Map<String, ShoppingList> ITEM_MAP = new HashMap<String, ShoppingList>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 4;
 
     static {
         // Add some sample items.

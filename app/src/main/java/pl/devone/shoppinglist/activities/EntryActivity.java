@@ -27,8 +27,7 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(EntryActivity.this, ShoppingListActivity.class));
             }
         });
     }
