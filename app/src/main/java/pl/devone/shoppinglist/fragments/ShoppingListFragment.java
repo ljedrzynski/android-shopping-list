@@ -10,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import pl.devone.shoppinglist.R;
-import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
+import pl.devone.shoppinglist.fragments.adapters.ShoppingListRecyclerViewAdapter;
+import pl.devone.shoppinglist.models.ShoppingList;
 
 /**
  * A fragment representing a list of Items.
@@ -67,7 +70,9 @@ public class ShoppingListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(ShoppingListContent.ITEMS, mListener));
+
+            //add
+            recyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(new ArrayList<ShoppingList>(), mListener));
         }
         return view;
     }
@@ -101,7 +106,6 @@ public class ShoppingListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(ShoppingListContent.ShoppingList item);
+        void onListFragmentInteraction(ShoppingList item);
     }
 }

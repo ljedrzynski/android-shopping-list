@@ -3,7 +3,6 @@ package pl.devone.shoppinglist.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.view.MenuItem;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
-import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
+import pl.devone.shoppinglist.models.ShoppingList;
 
 public class EntryActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {
 
@@ -55,7 +54,7 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
     }
 
     @Override
-    public void onListFragmentInteraction(ShoppingListContent.ShoppingList item) {
+    public void onListFragmentInteraction(ShoppingList item) {
 
     }
 }

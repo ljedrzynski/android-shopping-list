@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListItemFragment;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent;
+import pl.devone.shoppinglist.models.ShoppingListItem;
 
 public class ShoppingListActivity extends AppCompatActivity implements ShoppingListItemFragment.OnListFragmentInteractionListener {
 
@@ -52,7 +52,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.ShoppingListItem item) {
+    public void onListFragmentInteraction(ShoppingListItem item) {
 
     }
 }

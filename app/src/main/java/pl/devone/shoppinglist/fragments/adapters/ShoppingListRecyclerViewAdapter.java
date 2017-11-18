@@ -1,4 +1,4 @@
-package pl.devone.shoppinglist.fragments;
+package pl.devone.shoppinglist.fragments.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.devone.shoppinglist.R;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingListItem;
-import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
+import pl.devone.shoppinglist.fragments.ShoppingListFragment;
+import pl.devone.shoppinglist.models.ShoppingList;
+import pl.devone.shoppinglist.models.ShoppingListItem;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link ShoppingListItem} and makes a call to the
@@ -20,10 +22,10 @@ import pl.devone.shoppinglist.fragments.dummy.ShoppingListContent;
  */
 public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ShoppingListContent.ShoppingList> mValues;
+    private final List<ShoppingList> mValues;
     private final ShoppingListFragment.OnListFragmentInteractionListener mListener;
 
-    public ShoppingListRecyclerViewAdapter(List<ShoppingListContent.ShoppingList> items, ShoppingListFragment.OnListFragmentInteractionListener listener) {
+    public ShoppingListRecyclerViewAdapter(List<ShoppingList> items, ShoppingListFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -39,7 +41,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getId());
-        holder.mStartDate.setText(String.valueOf(mValues.get(position).getStartDate()));
+        holder.mStartDate.setText(String.valueOf(mValues.get(position).getCreatedAt()));
         holder.mDone.setVisibility(View.VISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +66,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         public final TextView mIdView;
         public final TextView mStartDate;
         public final ImageView mDone;
-        public ShoppingListContent.ShoppingList mItem;
+        private ShoppingList mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -72,6 +74,14 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
             mIdView = (TextView) view.findViewById(R.id.tv_id);
             mStartDate = (TextView) view.findViewById(R.id.tv_start_dt);
             mDone = (ImageView) view.findViewById(R.id.iv_done);
+        }
+
+        public ShoppingList getmItem() {
+            return mItem;
+        }
+
+        public void setmItem(ShoppingList mItem) {
+            this.mItem = mItem;
         }
 
         @Override

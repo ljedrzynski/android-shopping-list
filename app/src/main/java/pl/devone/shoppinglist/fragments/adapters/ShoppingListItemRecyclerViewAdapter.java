@@ -1,4 +1,4 @@
-package pl.devone.shoppinglist.fragments;
+package pl.devone.shoppinglist.fragments.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,23 +10,23 @@ import android.widget.TextView;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListItemFragment.OnListFragmentInteractionListener;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent;
+import pl.devone.shoppinglist.models.ShoppingListItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyContent.ShoppingListItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link ShoppingListItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyContent.ShoppingListItem> mValues;
+    private final List<ShoppingListItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-    //    private DummyContent.ShoppingListItem mItemOnFocus;
+    //    private ShoppingListItem mItemOnFocus;
     private ViewHolder mSelectedHolder;
 
-    public ShoppingListItemRecyclerViewAdapter(List<DummyContent.ShoppingListItem> items, OnListFragmentInteractionListener listener) {
+    public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -53,8 +53,6 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                 }
             }
         });
-
-
     }
 
     @Override
@@ -74,7 +72,7 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         public final EditText mPriceEditView;
         private boolean readonly;
 
-        private DummyContent.ShoppingListItem mItem;
+        private ShoppingListItem mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -96,13 +94,11 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
             readonly = true;
         }
 
-        public void init(DummyContent.ShoppingListItem shoppingListItem) {
-            boolean readonly = !shoppingListItem.isTransient();
+        public void init(ShoppingListItem shoppingListItem) {
             mItem = shoppingListItem;
-
-            reload();
-
             setReadonly(readonly);
+
+            refresh();
         }
 
         public void saveChanges() {
@@ -118,24 +114,30 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                 mItem.setQuantity(Integer.valueOf(temp));
             }
             mItem.setDone(mDoneCb.isChecked());
-            mItem.setTransient(false);
+            mItem.setNew(false);
 
             setReadonly(true);
         }
 
         public void setReadonly(boolean readonly) {
+            this.readonly = readonly;
             mQuantityView.setVisibility(readonly ? View.VISIBLE : View.GONE);
             mQuantityEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
             mNameView.setVisibility(readonly ? View.VISIBLE : View.GONE);
             mNameEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
             mPriceView.setVisibility(readonly ? View.VISIBLE : View.GONE);
             mPriceEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
-            reload();
 
-            this.readonly = readonly;
+            refresh();
         }
 
-        private void reload() {
+//        public boolean isValid() {
+//            return !(TextUtils.isEmpty(mNameEditView.getText().toString()) && TextUtils.equals(mQuantityEditView.getText().toString(), "0.0")
+//                    && TextUtils.equals(mPriceEditView.getText().toString(), "0"));
+//
+//        }
+
+        private void refresh() {
             if (mItem != null) {
                 mIdView.setText(String.valueOf(mItem.getId()));
                 mDoneCb.setChecked(mItem.isDone());
@@ -164,5 +166,9 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                     ", mItem=" + mItem +
                     '}';
         }
+    }
+
+    public ViewHolder getSelectedHolder() {
+        return mSelectedHolder;
     }
 }

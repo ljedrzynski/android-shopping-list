@@ -9,13 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.devone.shoppinglist.R;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent;
-import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingListItem;
+import pl.devone.shoppinglist.fragments.adapters.ShoppingListItemRecyclerViewAdapter;
+import pl.devone.shoppinglist.models.ShoppingListItem;
 
 /**
  * A fragment representing a list of Items.
@@ -25,13 +25,11 @@ import pl.devone.shoppinglist.fragments.dummy.DummyContent.ShoppingListItem;
  */
 public class ShoppingListItemFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-    private List<DummyContent.ShoppingListItem> mShoppingListItems = DummyContent.ITEMS;
+    private List<ShoppingListItem> mShoppingListItems = new ArrayList<ShoppingListItem>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -74,12 +72,6 @@ public class ShoppingListItemFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingListItems, mListener));
-            recyclerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(ShoppingListItemFragment.this.getContext(), "ttt", Toast.LENGTH_LONG).show();
-                }
-            });
 
             mRecyclerView = recyclerView;
         }
@@ -88,7 +80,8 @@ public class ShoppingListItemFragment extends Fragment {
 
     public void addEmptyItem() {
         ShoppingListItem shoppingListItem = new ShoppingListItem();
-        shoppingListItem.setId(mShoppingListItems.size()  + 1);
+        shoppingListItem.setId(mShoppingListItems.size() + 1);
+        shoppingListItem.setNew(true);
         mShoppingListItems.add(shoppingListItem);
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
