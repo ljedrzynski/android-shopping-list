@@ -23,7 +23,6 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
 
     private final List<ShoppingListItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-    //    private ShoppingListItem mItemOnFocus;
     private ViewHolder mSelectedHolder;
 
     public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener) {
@@ -58,6 +57,12 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void setReadonly() {
+        if (mSelectedHolder != null) {
+            mSelectedHolder.setReadonly(true);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -130,12 +135,6 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
 
             refresh();
         }
-
-//        public boolean isValid() {
-//            return !(TextUtils.isEmpty(mNameEditView.getText().toString()) && TextUtils.equals(mQuantityEditView.getText().toString(), "0.0")
-//                    && TextUtils.equals(mPriceEditView.getText().toString(), "0"));
-//
-//        }
 
         private void refresh() {
             if (mItem != null) {

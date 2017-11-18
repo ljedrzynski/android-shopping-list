@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.devone.shoppinglist.R;
@@ -40,7 +39,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
+        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
         holder.mStartDate.setText(String.valueOf(mValues.get(position).getCreatedAt()));
         holder.mDone.setVisibility(View.VISIBLE);
 

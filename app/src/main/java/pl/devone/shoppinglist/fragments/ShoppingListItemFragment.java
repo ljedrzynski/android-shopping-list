@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.adapters.ShoppingListItemRecyclerViewAdapter;
+import pl.devone.shoppinglist.handlers.DatabaseHandler;
+import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 
 /**
@@ -29,7 +31,7 @@ public class ShoppingListItemFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-    private List<ShoppingListItem> mShoppingListItems = new ArrayList<ShoppingListItem>();
+    private ShoppingList mShoppingList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,6 +57,16 @@ public class ShoppingListItemFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        mShoppingList = (ShoppingList) getActivity().getIntent().getSerializableExtra("shopping_list");
+        if (mShoppingList != null && mShoppingList.getId() > 0) {
+            mShoppingList.setItems(DatabaseHandler.getHandler(getContext()).getShoppingListItems(mShoppingList));
+        } else {
+            mShoppingList = new ShoppingList();
+            mShoppingList.setId(getActivity().getIntent().getIntExtra("shopping_list_count", 1));
+            mShoppingList.setCreatedAt(new Date());
+            mShoppingList.setItems(new ArrayList<ShoppingListItem>());
+        }
     }
 
     @Override
@@ -65,34 +77,37 @@ public class ShoppingListItemFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
+
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingListItems, mListener));
+            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener));
 
             mRecyclerView = recyclerView;
         }
         return view;
     }
 
-    public void addEmptyItem() {
+    public void addNewItem() {
         ShoppingListItem shoppingListItem = new ShoppingListItem();
-        shoppingListItem.setId(mShoppingListItems.size() + 1);
+        shoppingListItem.setId(mShoppingList.getItemsCount() + 1);
+        shoppingListItem.setShoppingList(mShoppingList);
         shoppingListItem.setNew(true);
-        mShoppingListItems.add(shoppingListItem);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        mShoppingList.getItems().add(shoppingListItem);
+
+        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+        adapter.notifyDataSetChanged();
     }
 
-//    public void saveNewItems() {
-//        for (ShoppingListItem shoppingListItem : mShoppingListItems) {
-//            shoppingListItem.setReadonly(true);
-//        }
-//        mRecyclerView.getAdapter().notifyDataSetChanged();
-//    }
+    public void save() {
+        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+        adapter.setReadonly();
 
+        DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
+    }
 
     @Override
     public void onAttach(Context context) {

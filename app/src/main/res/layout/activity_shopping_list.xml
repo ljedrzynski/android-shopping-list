@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.devone.shoppinglist.activities.ShoppingListActivity">
+    tools:mContext="pl.devone.shoppinglist.activities.ShoppingListActivity">
 
     <fragment
         android:id="@+id/shopping_item_list_fragment"

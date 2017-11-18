@@ -3,6 +3,7 @@ package pl.devone.shoppinglist.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,9 +12,12 @@ import android.view.MenuItem;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
+import pl.devone.shoppinglist.handlers.DatabaseHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 
 public class EntryActivity extends AppCompatActivity implements ShoppingListFragment.OnListFragmentInteractionListener {
+
+    private ShoppingListFragment mShoppingListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,9 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(EntryActivity.this, ShoppingListActivity.class));
+                Intent intent = new Intent(EntryActivity.this, ShoppingListActivity.class);
+                intent.putExtra("shopping_list_count", mShoppingListFragment.getShoppingLists() != null ? mShoppingListFragment.getShoppingLists().size() : 0);
+                startActivity(intent);
             }
         });
     }
@@ -36,6 +42,13 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof ShoppingListFragment) {
+            mShoppingListFragment = (ShoppingListFragment) fragment;
+        }
     }
 
     @Override
@@ -55,6 +68,8 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
 
     @Override
     public void onListFragmentInteraction(ShoppingList item) {
-
+        Intent intent = new Intent(EntryActivity.this, ShoppingListActivity.class);
+        intent.putExtra("shopping_list", item);
+        startActivity(intent);
     }
 }

@@ -79,5 +79,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-    <string name="add_item">Add</string>
+    <string name="title_add_item">Add</string>
+    <string name="title_save">Save</string>
 </resources>

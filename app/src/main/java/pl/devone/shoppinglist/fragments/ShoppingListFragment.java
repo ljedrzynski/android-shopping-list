@@ -10,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.adapters.ShoppingListRecyclerViewAdapter;
+import pl.devone.shoppinglist.handlers.DatabaseHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 
 /**
@@ -24,11 +25,11 @@ import pl.devone.shoppinglist.models.ShoppingList;
  */
 public class ShoppingListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private List<ShoppingList> mShoppingLists;
+    private RecyclerView mRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,24 +58,40 @@ public class ShoppingListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        reload();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shopping_item_list, container, false);
-
-        // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-
-            //add
-            recyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(new ArrayList<ShoppingList>(), mListener));
+            mRecyclerView = (RecyclerView) view;
         }
+        initRecyclerView();
+
         return view;
+    }
+
+    private void initRecyclerView() {
+        mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+
+        Context context = mRecyclerView.getContext();
+        if (mColumnCount <= 1) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+
+        mRecyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(mShoppingLists, mListener));
+    }
+
+    private void reload() {
+        mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
 
@@ -95,16 +112,10 @@ public class ShoppingListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public List<ShoppingList> getShoppingLists() {
+        return mShoppingLists;
+    }
+
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(ShoppingList item);
     }
