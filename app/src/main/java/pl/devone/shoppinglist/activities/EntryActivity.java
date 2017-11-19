@@ -1,6 +1,7 @@
 package pl.devone.shoppinglist.activities;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
 
     private ShoppingListFragment mShoppingListFragment;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,7 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EntryActivity.this, ShoppingListActivity.class);
-                intent.putExtra("shopping_list_count", mShoppingListFragment.getShoppingLists() != null ? mShoppingListFragment.getShoppingLists().size() : 0);
+//                intent.putExtra("shopping_list_count", mShoppingListFragment.getShoppingLists() != null ? mShoppingListFragment.getShoppingLists().size() : 0);
                 startActivity(intent);
             }
         });

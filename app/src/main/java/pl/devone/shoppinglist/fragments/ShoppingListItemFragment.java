@@ -1,5 +1,6 @@
 package pl.devone.shoppinglist.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,7 @@ public class ShoppingListItemFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -63,7 +65,6 @@ public class ShoppingListItemFragment extends Fragment {
             mShoppingList.setItems(DatabaseHandler.getHandler(getContext()).getShoppingListItems(mShoppingList));
         } else {
             mShoppingList = new ShoppingList();
-            mShoppingList.setId(getActivity().getIntent().getIntExtra("shopping_list_count", 1));
             mShoppingList.setCreatedAt(new Date());
             mShoppingList.setItems(new ArrayList<ShoppingListItem>());
         }
@@ -74,7 +75,6 @@ public class ShoppingListItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shopping_item_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
 
@@ -87,24 +87,29 @@ public class ShoppingListItemFragment extends Fragment {
             recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener));
 
             mRecyclerView = recyclerView;
+
+            if (mShoppingList.getItemsCount() == 0) {
+                addNewItem();
+            }
         }
         return view;
     }
 
     public void addNewItem() {
+        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+        adapter.saveChanges();
+
         ShoppingListItem shoppingListItem = new ShoppingListItem();
-        shoppingListItem.setId(mShoppingList.getItemsCount() + 1);
+        shoppingListItem.setNo(mShoppingList.getItemsCount() + 1);
         shoppingListItem.setShoppingList(mShoppingList);
-        shoppingListItem.setNew(true);
         mShoppingList.getItems().add(shoppingListItem);
 
-        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
         adapter.notifyDataSetChanged();
     }
 
     public void save() {
         ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
-        adapter.setReadonly();
+        adapter.saveChanges();
 
         DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
     }
@@ -138,7 +143,6 @@ public class ShoppingListItemFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(ShoppingListItem item);
     }
 }

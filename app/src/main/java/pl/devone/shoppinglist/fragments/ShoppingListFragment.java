@@ -61,7 +61,7 @@ public class ShoppingListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        reload();
+        loadData();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+        loadData();
 
         Context context = mRecyclerView.getContext();
         if (mColumnCount <= 1) {
@@ -89,9 +89,20 @@ public class ShoppingListFragment extends Fragment {
         mRecyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(mShoppingLists, mListener));
     }
 
-    private void reload() {
-        mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+    private void loadData() {
+        List<ShoppingList> shoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+        if (mShoppingLists == null) {
+            mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+        } else {
+            for (ShoppingList shoppingList : shoppingLists) {
+                if (!mShoppingLists.contains(shoppingList)) {
+                    mShoppingLists.add(shoppingList);
+                }
+            }
+
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+
     }
 
 

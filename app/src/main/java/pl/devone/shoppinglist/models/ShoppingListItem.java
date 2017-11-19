@@ -1,24 +1,24 @@
 package pl.devone.shoppinglist.models;
 
 public class ShoppingListItem {
-    private int id;
+    private long id;
+    private int no;
     private String name;
     private int quantity;
     private double price;
     private boolean isDone;
-    private boolean isNew;
     private ShoppingList shoppingList;
 
     public ShoppingListItem() {
     }
 
-    public ShoppingListItem(int id, String name, int quantity, double price, boolean isDone, boolean isNew, ShoppingList shoppingList) {
+    public ShoppingListItem(long id, int no, String name, int quantity, double price, boolean isDone, ShoppingList shoppingList) {
         this.id = id;
+        this.no = no;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.isDone = isDone;
-        this.isNew = isNew;
         this.shoppingList = shoppingList;
     }
 
@@ -26,11 +26,11 @@ public class ShoppingListItem {
         return shoppingList;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -66,17 +66,22 @@ public class ShoppingListItem {
         isDone = done;
     }
 
-    public boolean isNew() {
-        return isNew;
-    }
-
-    public void setNew(boolean aNew) {
-        isNew = aNew;
+    public boolean isTransient() {
+        return id == 0;
     }
 
     public void setShoppingList(ShoppingList shoppingList) {
         this.shoppingList = shoppingList;
     }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -86,10 +91,10 @@ public class ShoppingListItem {
         ShoppingListItem that = (ShoppingListItem) o;
 
         if (id != that.id) return false;
+        if (no != that.no) return false;
         if (quantity != that.quantity) return false;
         if (Double.compare(that.price, price) != 0) return false;
         if (isDone != that.isDone) return false;
-        if (isNew != that.isNew) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         return shoppingList != null ? shoppingList.equals(that.shoppingList) : that.shoppingList == null;
     }
@@ -98,13 +103,13 @@ public class ShoppingListItem {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
+        result = (int) (id ^ (id >>> 32));
+        result = 31 * result + no;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + quantity;
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (isDone ? 1 : 0);
-        result = 31 * result + (isNew ? 1 : 0);
         result = 31 * result + (shoppingList != null ? shoppingList.hashCode() : 0);
         return result;
     }
@@ -113,11 +118,11 @@ public class ShoppingListItem {
     public String toString() {
         return "ShoppingListItem{" +
                 "id=" + id +
+                ", no=" + no +
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", isDone=" + isDone +
-                ", isNew=" + isNew +
                 '}';
     }
 }

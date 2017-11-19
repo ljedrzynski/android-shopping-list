@@ -40,7 +40,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-        holder.mStartDate.setText(String.valueOf(mValues.get(position).getCreatedAt()));
+        holder.mCreateDate.setText(String.valueOf(mValues.get(position).getCreatedAt()));
         holder.mDone.setVisibility(View.VISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +63,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mStartDate;
+        public final TextView mCreateDate;
         public final ImageView mDone;
         private ShoppingList mItem;
 
@@ -71,16 +71,8 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.tv_id);
-            mStartDate = (TextView) view.findViewById(R.id.tv_start_dt);
+            mCreateDate = (TextView) view.findViewById(R.id.tv_start_dt);
             mDone = (ImageView) view.findViewById(R.id.iv_done);
-        }
-
-        public ShoppingList getmItem() {
-            return mItem;
-        }
-
-        public void setmItem(ShoppingList mItem) {
-            this.mItem = mItem;
         }
 
         @Override

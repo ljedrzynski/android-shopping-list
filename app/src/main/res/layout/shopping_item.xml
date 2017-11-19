@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:width="30dp"
+        android:width="50dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <EditText
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:width="30dp"
+        android:width="50dp"
         android:inputType="numberDecimal"
         android:textAppearance="?attr/textAppearanceListItem"
         android:visibility="gone" />
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:width="30dp"
+        android:width="50dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <EditText
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:width="30dp"
+        android:width="50dp"
         android:inputType="number"
         android:textAppearance="?attr/textAppearanceListItem"
         android:visibility="gone" />

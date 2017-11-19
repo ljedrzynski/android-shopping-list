@@ -59,9 +59,9 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         return mValues.size();
     }
 
-    public void setReadonly() {
+    public void saveChanges() {
         if (mSelectedHolder != null) {
-            mSelectedHolder.setReadonly(true);
+            mSelectedHolder.saveChanges();
         }
     }
 
@@ -119,7 +119,7 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                 mItem.setQuantity(Integer.valueOf(temp));
             }
             mItem.setDone(mDoneCb.isChecked());
-            mItem.setNew(false);
+//            mItem.setNew(false);.
 
             setReadonly(true);
         }
@@ -138,9 +138,8 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
 
         private void refresh() {
             if (mItem != null) {
-                mIdView.setText(String.valueOf(mItem.getId()));
+                mIdView.setText(String.valueOf(mItem.getNo()));
                 mDoneCb.setChecked(mItem.isDone());
-                mIdView.setText(String.valueOf(mItem.getId()));
                 mNameView.setText(mItem.getName());
                 mQuantityView.setText(String.valueOf(mItem.getQuantity()));
                 mPriceView.setText(String.valueOf(mItem.getPrice()));
