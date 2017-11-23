@@ -60,8 +60,7 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        loadData();
+        getData();
     }
 
     @Override
@@ -77,8 +76,7 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        loadData();
-
+        getData();
         Context context = mRecyclerView.getContext();
         if (mColumnCount <= 1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -86,23 +84,25 @@ public class ShoppingListFragment extends Fragment {
             mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        mRecyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(mShoppingLists, mListener));
+        mRecyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(context, mShoppingLists, mListener));
     }
 
-    private void loadData() {
+    private void getData() {
         List<ShoppingList> shoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
         if (mShoppingLists == null) {
             mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
         } else {
             for (ShoppingList shoppingList : shoppingLists) {
-                if (!mShoppingLists.contains(shoppingList)) {
+                int index = mShoppingLists.indexOf(shoppingList);
+                if (index > -1) {
+                    mShoppingLists.get(index).setDone(shoppingList.isDone());
+                } else {
                     mShoppingLists.add(shoppingList);
                 }
             }
 
             mRecyclerView.getAdapter().notifyDataSetChanged();
         }
-
     }
 
 

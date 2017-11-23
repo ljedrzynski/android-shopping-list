@@ -1,4 +1,4 @@
-package pl.devone.shoppinglist.Utils;
+package pl.devone.shoppinglist.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Context;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import pl.devone.shoppinglist.R;
@@ -17,12 +16,10 @@ import pl.devone.shoppinglist.R;
 
 public class DateUtils {
 
-    @SuppressLint("SimpleDateFormat")
     public static Date formatStringToDate(String date, Context context) {
         Date resultDate = null;
         try {
-            resultDate = new SimpleDateFormat(context.getString(R.string.date_format)).parse(date);
-            System.out.println(resultDate);
+            resultDate = getDateFormat(context).parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -31,8 +28,11 @@ public class DateUtils {
     }
 
     public static String formatDateToString(Date date, Context context) {
-        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(context.getString(R.string.date_format));
+        return getDateFormat(context).format(date);
+    }
 
-        return df.format(date);
+    @SuppressLint("SimpleDateFormat")
+    public static DateFormat getDateFormat(Context context) {
+        return new SimpleDateFormat(context.getString(R.string.date_format));
     }
 }

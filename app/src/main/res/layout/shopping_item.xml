@@ -74,4 +74,5 @@
         android:inputType="number"
         android:textAppearance="?attr/textAppearanceListItem"
         android:visibility="gone" />
+
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
 
     private final List<ShoppingListItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private ViewHolder mSelectedHolder;
+    private boolean save = false;
 
     public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -37,21 +38,19 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         return new ViewHolder(view);
     }
 
+    public void notifyDataSetSaved() {
+        save = true;
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.init(mValues.get(position));
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    if (mSelectedHolder != null && mSelectedHolder != holder) {
-                        mSelectedHolder.saveChanges();
-                    }
-                    holder.setReadonly(false);
-                    mSelectedHolder = holder;
-                }
-            }
-        });
+        ShoppingListItem shoppingListItem = mValues.get(position);
+        holder.setItem(shoppingListItem);
+        if (save) {
+            holder.forceSave();
+            save = false;
+        }
     }
 
     @Override
@@ -59,13 +58,7 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         return mValues.size();
     }
 
-    public void saveChanges() {
-        if (mSelectedHolder != null) {
-            mSelectedHolder.saveChanges();
-        }
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mNameView;
@@ -75,9 +68,14 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         public final EditText mNameEditView;
         public final EditText mQuantityEditView;
         public final EditText mPriceEditView;
-        private boolean readonly;
-
         private ShoppingListItem mItem;
+        private HolderFieldSaveHandler mNameFieldSaveHandler;
+        private HolderFieldSaveHandler mQuantityFieldSaveHandler;
+        private HolderFieldSaveHandler mPriceFieldSaveHandler;
+
+        interface HolderFieldSaveHandler {
+            void onSave();
+        }
 
         public ViewHolder(View view) {
             super(view);
@@ -90,53 +88,12 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
             mQuantityView = (TextView) view.findViewById(R.id.tv_quantity);
             mQuantityEditView = (EditText) view.findViewById(R.id.np_quantity);
             mDoneCb = (CheckBox) view.findViewById(R.id.cb_done);
-            mDoneCb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    saveChanges();
-                }
-            });
-            readonly = true;
+            initHandlers();
+            initListeners();
         }
 
-        public void init(ShoppingListItem shoppingListItem) {
+        public void setItem(ShoppingListItem shoppingListItem) {
             mItem = shoppingListItem;
-            setReadonly(readonly);
-
-            refresh();
-        }
-
-        public void saveChanges() {
-            String temp = mNameEditView.getText().toString();
-            mItem.setName(temp);
-
-            temp = mPriceEditView.getText().toString();
-            if (!temp.isEmpty()) {
-                mItem.setPrice(Double.valueOf(temp));
-            }
-            temp = mQuantityEditView.getText().toString();
-            if (!temp.isEmpty()) {
-                mItem.setQuantity(Integer.valueOf(temp));
-            }
-            mItem.setDone(mDoneCb.isChecked());
-//            mItem.setNew(false);.
-
-            setReadonly(true);
-        }
-
-        public void setReadonly(boolean readonly) {
-            this.readonly = readonly;
-            mQuantityView.setVisibility(readonly ? View.VISIBLE : View.GONE);
-            mQuantityEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
-            mNameView.setVisibility(readonly ? View.VISIBLE : View.GONE);
-            mNameEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
-            mPriceView.setVisibility(readonly ? View.VISIBLE : View.GONE);
-            mPriceEditView.setVisibility(readonly ? View.GONE : View.VISIBLE);
-
-            refresh();
-        }
-
-        private void refresh() {
             if (mItem != null) {
                 mIdView.setText(String.valueOf(mItem.getNo()));
                 mDoneCb.setChecked(mItem.isDone());
@@ -146,6 +103,107 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                 mNameEditView.setText(mItem.getName());
                 mQuantityEditView.setText(String.valueOf(mItem.getQuantity()));
                 mPriceEditView.setText(String.valueOf(mItem.getPrice()));
+            }
+        }
+
+        public void forceSave() {
+            saveField(mNameView, mNameEditView, mNameFieldSaveHandler);
+            saveField(mPriceView, mPriceEditView, mPriceFieldSaveHandler);
+            saveField(mQuantityView, mQuantityEditView, mQuantityFieldSaveHandler);
+        }
+
+        private void initHandlers() {
+            mNameFieldSaveHandler = new HolderFieldSaveHandler() {
+                @Override
+                public void onSave() {
+                    String temp = mNameEditView.getText().toString();
+                    mItem.setName(temp);
+                    mNameView.setText(temp);
+                }
+            };
+            mQuantityFieldSaveHandler = new HolderFieldSaveHandler() {
+                @Override
+                public void onSave() {
+                    String temp = mQuantityEditView.getText().toString();
+                    if (!temp.isEmpty()) {
+                        mItem.setQuantity(Integer.valueOf(temp));
+                        mQuantityView.setText(temp);
+                    }
+                }
+            };
+            mPriceFieldSaveHandler = new HolderFieldSaveHandler() {
+                @Override
+                public void onSave() {
+                    String temp = mPriceEditView.getText().toString();
+                    if (!temp.isEmpty()) {
+                        mItem.setPrice(Double.valueOf(temp));
+                        mPriceView.setText(temp);
+                    }
+                }
+            };
+        }
+
+        private void initListeners() {
+            mDoneCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mItem.setDone(mDoneCb.isChecked());
+                }
+            });
+            mNameView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    makeFieldEditable(true, mNameView, mNameEditView);
+                }
+            });
+            mNameEditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        saveField(mNameView, mNameEditView, mNameFieldSaveHandler);
+                    }
+                }
+            });
+            mQuantityView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    makeFieldEditable(true, mQuantityView, mQuantityEditView);
+                }
+            });
+            mQuantityEditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        saveField(mQuantityView, mQuantityEditView, mQuantityFieldSaveHandler);
+                    }
+                }
+            });
+            mPriceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    makeFieldEditable(true, mPriceView, mPriceEditView);
+                }
+            });
+            mPriceEditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        saveField(mPriceView, mPriceEditView, mPriceFieldSaveHandler);
+                    }
+                }
+            });
+        }
+
+
+        private static void makeFieldEditable(boolean editable, TextView tv, EditText et) {
+            tv.setVisibility(editable ? View.GONE : View.VISIBLE);
+            et.setVisibility(editable ? View.VISIBLE : View.GONE);
+        }
+
+        private static void saveField(TextView tv, EditText et, HolderFieldSaveHandler onSaveHandler) {
+            makeFieldEditable(false, tv, et);
+            if (onSaveHandler != null) {
+                onSaveHandler.onSave();
             }
         }
 
@@ -166,7 +224,4 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         }
     }
 
-    public ViewHolder getSelectedHolder() {
-        return mSelectedHolder;
-    }
 }

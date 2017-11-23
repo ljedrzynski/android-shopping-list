@@ -1,5 +1,6 @@
 package pl.devone.shoppinglist.fragments.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +14,21 @@ import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
 import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
+import pl.devone.shoppinglist.utils.DateUtils;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link ShoppingListItem} and makes a call to the
  * specified {@link ShoppingListFragment.OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ * TODO: Replace the implementation with code for your data
  */
 public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder> {
 
     private final List<ShoppingList> mValues;
     private final ShoppingListFragment.OnListFragmentInteractionListener mListener;
+    private final Context mContext;
 
-    public ShoppingListRecyclerViewAdapter(List<ShoppingList> items, ShoppingListFragment.OnListFragmentInteractionListener listener) {
+    public ShoppingListRecyclerViewAdapter(Context context, List<ShoppingList> items, ShoppingListFragment.OnListFragmentInteractionListener listener) {
+        mContext = context;
         mValues = items;
         mListener = listener;
     }
@@ -38,11 +42,11 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-        holder.mCreateDate.setText(String.valueOf(mValues.get(position).getCreatedAt()));
-        holder.mDone.setVisibility(View.VISIBLE);
-
+        ShoppingList shoppingList = mValues.get(position);
+        holder.mItem = shoppingList;
+        holder.mIdView.setText(String.valueOf(shoppingList.getId()));
+        holder.mCreateDate.setText(DateUtils.getDateFormat(mContext).format(shoppingList.getCreatedAt()));
+        holder.mDone.setVisibility(shoppingList.isDone() ? View.VISIBLE : View.INVISIBLE);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

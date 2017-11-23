@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.devone.shoppinglist.Utils.DateUtils;
+import pl.devone.shoppinglist.utils.DateUtils;
 import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 

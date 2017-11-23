@@ -1,6 +1,5 @@
 package pl.devone.shoppinglist.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,10 +73,8 @@ public class ShoppingListItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shopping_item_list, container, false);
-
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -85,33 +82,29 @@ public class ShoppingListItemFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener));
-
             mRecyclerView = recyclerView;
 
             if (mShoppingList.getItemsCount() == 0) {
                 addNewItem();
             }
         }
+
         return view;
     }
 
     public void addNewItem() {
         ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
-        adapter.saveChanges();
-
         ShoppingListItem shoppingListItem = new ShoppingListItem();
         shoppingListItem.setNo(mShoppingList.getItemsCount() + 1);
         shoppingListItem.setShoppingList(mShoppingList);
         mShoppingList.getItems().add(shoppingListItem);
-
         adapter.notifyDataSetChanged();
     }
 
     public void save() {
         ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
-        adapter.saveChanges();
-
         DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
+        adapter.notifyDataSetSaved();
     }
 
     @Override
