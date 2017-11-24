@@ -90,17 +90,13 @@ public class ShoppingListFragment extends Fragment {
     private void getData() {
         List<ShoppingList> shoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
         if (mShoppingLists == null) {
-            mShoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
+            mShoppingLists = shoppingLists;
         } else {
-            for (ShoppingList shoppingList : shoppingLists) {
-                int index = mShoppingLists.indexOf(shoppingList);
-                if (index > -1) {
-                    mShoppingLists.get(index).setDone(shoppingList.isDone());
-                } else {
-                    mShoppingLists.add(shoppingList);
-                }
+            mShoppingLists.clear();
+            mShoppingLists.addAll(shoppingLists);
+            for (int i = 0; i < mShoppingLists.size(); i++) {
+                mShoppingLists.get(i).setNo(i + 1);
             }
-
             mRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }

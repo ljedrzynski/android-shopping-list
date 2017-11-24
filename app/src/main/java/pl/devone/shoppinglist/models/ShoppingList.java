@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ShoppingList implements Serializable {
     private long id;
+    private int no;
     private Date createdAt;
     private List<ShoppingListItem> items;
     private boolean isDone;
@@ -26,6 +27,14 @@ public class ShoppingList implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public Date getCreatedAt() {
@@ -76,6 +85,8 @@ public class ShoppingList implements Serializable {
         ShoppingList that = (ShoppingList) o;
 
         if (id != that.id) return false;
+        if (no != that.no) return false;
+        if (isDone != that.isDone) return false;
         if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null)
             return false;
         return items != null ? items.equals(that.items) : that.items == null;
@@ -84,8 +95,10 @@ public class ShoppingList implements Serializable {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + no;
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + (items != null ? items.hashCode() : 0);
+        result = 31 * result + (isDone ? 1 : 0);
         return result;
     }
 
@@ -93,8 +106,10 @@ public class ShoppingList implements Serializable {
     public String toString() {
         return "ShoppingList{" +
                 "id=" + id +
+                ", no=" + no +
                 ", createdAt=" + createdAt +
                 ", items=" + items +
+                ", isDone=" + isDone +
                 '}';
     }
 }

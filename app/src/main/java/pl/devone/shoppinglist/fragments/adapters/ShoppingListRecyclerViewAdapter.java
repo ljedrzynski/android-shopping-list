@@ -44,7 +44,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ShoppingList shoppingList = mValues.get(position);
         holder.mItem = shoppingList;
-        holder.mIdView.setText(String.valueOf(shoppingList.getId()));
+        holder.mIdView.setText(String.valueOf(shoppingList.getNo()));
         holder.mCreateDate.setText(DateUtils.getDateFormat(mContext).format(shoppingList.getCreatedAt()));
         holder.mDone.setVisibility(shoppingList.isDone() ? View.VISIBLE : View.INVISIBLE);
         holder.mView.setOnClickListener(new View.OnClickListener() {

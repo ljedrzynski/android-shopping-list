@@ -16,6 +16,7 @@ import java.util.Date;
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.adapters.ShoppingListItemRecyclerViewAdapter;
 import pl.devone.shoppinglist.handlers.DatabaseHandler;
+import pl.devone.shoppinglist.handlers.PreferenceHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 
@@ -103,7 +104,11 @@ public class ShoppingListItemFragment extends Fragment {
 
     public void save() {
         ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
-        DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
+        if (PreferenceHandler.isAutoDeleteMode(getContext()) && mShoppingList.allItemsDone()) {
+            DatabaseHandler.getHandler(getContext()).deleteShoppingList(mShoppingList);
+        } else {
+            DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
+        }
         adapter.notifyDataSetSaved();
     }
 

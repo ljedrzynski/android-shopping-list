@@ -26,6 +26,8 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -34,7 +36,6 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EntryActivity.this, ShoppingListActivity.class);
-//                intent.putExtra("shopping_list_count", mShoppingListFragment.getShoppingLists() != null ? mShoppingListFragment.getShoppingLists().size() : 0);
                 startActivity(intent);
             }
         });

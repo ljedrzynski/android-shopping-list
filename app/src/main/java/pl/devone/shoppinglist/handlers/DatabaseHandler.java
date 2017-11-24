@@ -21,7 +21,7 @@ import pl.devone.shoppinglist.models.ShoppingListItem;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String TAG = DatabaseHandler.class.getCanonicalName();
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     private static final String DATABASE_NAME = "shoppingList";
     private static final String TABLE_SHOPPING_LIST = "shopping_list";
@@ -54,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "Creating table " + TABLE_SHOPPING_LIST);
         String CREATE_SHOPPING_LIST_TABLE = "CREATE TABLE " + TABLE_SHOPPING_LIST + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_CREATED_AT + " TEXT," + COL_DONE + " INTEGER)";
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_NO + " INT," + COL_CREATED_AT + " TEXT," + COL_DONE + " INTEGER)";
         db.execSQL(CREATE_SHOPPING_LIST_TABLE);
 
         Log.i(TAG, "Creating table " + TABLE_SHOPPING_LIST_ITEM);
@@ -74,24 +74,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<ShoppingList> getShoppingLists() {
+        Log.i(TAG, "Fetching shoppingLists from database");
         List<ShoppingList> result = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Log.i(TAG, "Fetching shoppingLists from database");
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST, null);
+        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST, null)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    ShoppingList shoppingList = new ShoppingList();
+                    shoppingList.setId(cursor.getInt(0));
+                    shoppingList.setNo(cursor.getInt(1));
+                    shoppingList.setCreatedAt(DateUtils.formatStringToDate(cursor.getString(2), mContext));
+                    shoppingList.setDone(cursor.getInt(3) == 1);
+                    result.add(shoppingList);
+                } while (cursor.moveToNext());
+            }
 
-        if (cursor.moveToFirst()) {
-            do {
-                ShoppingList shoppingList = new ShoppingList();
-                shoppingList.setId(cursor.getInt(0));
-                shoppingList.setCreatedAt(DateUtils.formatStringToDate(cursor.getString(1), mContext));
-                shoppingList.setDone(cursor.getInt(2) == 1);
-                result.add(shoppingList);
-            } while (cursor.moveToNext());
+            Log.i(TAG, "Fetched: " + result.size());
+
         }
-
-        Log.i(TAG, "Fetched: " + result.size());
-
         return result;
     }
 
@@ -104,23 +105,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Log.i(TAG, "Fetching items for shoppingList with id:" + shoppingList.getId() + " from database");
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM + " WHERE " + FKEY_SHOPPING_LIST_ID + "=" + shoppingList.getId(), null);
+        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM + " WHERE " + FKEY_SHOPPING_LIST_ID + "=" + shoppingList.getId(), null)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    ShoppingListItem shoppingListItem = new ShoppingListItem();
+                    shoppingListItem.setId(cursor.getInt(0));
+                    shoppingListItem.setNo(cursor.getInt(1));
+                    shoppingListItem.setName(cursor.getString(2));
+                    shoppingListItem.setQuantity(cursor.getInt(3));
+                    shoppingListItem.setPrice(cursor.getInt(4));
+                    shoppingListItem.setDone(cursor.getInt(5) == 1);
+                    shoppingListItem.setShoppingList(shoppingList);
+                    result.add(shoppingListItem);
+                } while (cursor.moveToNext());
+            }
 
-        if (cursor.moveToFirst()) {
-            do {
-                ShoppingListItem shoppingListItem = new ShoppingListItem();
-                shoppingListItem.setId(cursor.getInt(0));
-                shoppingListItem.setNo(cursor.getInt(1));
-                shoppingListItem.setName(cursor.getString(2));
-                shoppingListItem.setQuantity(cursor.getInt(3));
-                shoppingListItem.setPrice(cursor.getInt(4));
-                shoppingListItem.setDone(cursor.getInt(5) == 1);
-                shoppingListItem.setShoppingList(shoppingList);
-                result.add(shoppingListItem);
-            } while (cursor.moveToNext());
         }
-
         Log.i(TAG, "Fetched: " + result.size());
+
 
         return result;
     }
@@ -155,6 +157,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.endTransaction();
             db.close();
         }
+    }
+
+    public void deleteShoppingList(ShoppingList shoppingList) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
+        try {
+            Log.i(TAG, "Deleting shoppingList: " + shoppingList.toString());
+
+            if (shoppingList.getItems() != null) {
+                for (ShoppingListItem shoppingListItem : shoppingList.getItems()) {
+                    deleteShoppingListItem(shoppingListItem, db);
+                }
+            }
+
+            db.delete(TABLE_SHOPPING_LIST, KEY_ID + "=" + shoppingList.getId(), null);
+
+            db.setTransactionSuccessful();
+            Log.i(TAG, "Deleted with success");
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    private void deleteShoppingListItem(ShoppingListItem shoppingListItem, SQLiteDatabase db) {
+        if (db == null) {
+            throw new RuntimeException("SQLiteDatabase object is null");
+        }
+        Log.i(TAG, "Deleting shoppingListItem: " + shoppingListItem.toString());
+
+        db.delete(TABLE_SHOPPING_LIST_ITEM, KEY_ID + "=" + shoppingListItem.getId(), null);
+
+        Log.i(TAG, "Deleted with success");
     }
 
     private void saveShoppingListItem(ShoppingListItem shoppingListItem, ShoppingList shoppingList, SQLiteDatabase db) {
