@@ -16,6 +16,12 @@ public class PreferenceHandler {
         return sharedPreferences.getBoolean("remove_done_shopping_list", false);
     }
 
+    public static int getCommonFontSize(Context context) {
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        //walkaround
+        return Integer.valueOf(sharedPreferences.getString("font_size", "17"));
+    }
+
     public static SharedPreferences getSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }

@@ -1,5 +1,6 @@
 package pl.devone.shoppinglist.fragments.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListItemFragment.OnListFragmentInteractionListener;
+import pl.devone.shoppinglist.handlers.PreferenceHandler;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 
 import java.util.List;
@@ -24,11 +26,13 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
 
     private final List<ShoppingListItem> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private final Context mContext;
     private boolean save = false;
 
-    public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener) {
+    public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -47,6 +51,8 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ShoppingListItem shoppingListItem = mValues.get(position);
         holder.setItem(shoppingListItem);
+        holder.changeFontSize(PreferenceHandler.getCommonFontSize(mContext));
+
         if (save) {
             holder.forceSave();
             save = false;
@@ -141,6 +147,17 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                     }
                 }
             };
+        }
+
+        public void changeFontSize(int size) {
+            mIdView.setTextSize(size);
+            mDoneCb.setTextSize(size);
+            mNameView.setTextSize(size);
+            mQuantityView.setTextSize(size);
+            mPriceView.setTextSize(size);
+            mNameEditView.setTextSize(size);
+            mQuantityEditView.setTextSize(size);
+            mPriceEditView.setTextSize(size);
         }
 
         private void initListeners() {

@@ -9,8 +9,7 @@
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_social_recommendations">Auto-delete old shopping lists</string>
-    <string name="pref_remove_done_shopping_list">Deletes shopping list when marked as done
-    </string>
+    <string name="pref_remove_done_shopping_list">Deletes shopping list when marked as done</string>
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
@@ -56,10 +55,17 @@
         <item>Entry 3</item>
     </string-array>
 
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string name="pref_title_font_sizes">Font size</string>
+    <string-array name="list_preference_font_sizes">
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
     </string-array>
 
     <string-array name="multi_select_list_preference_default_value" />
@@ -68,7 +74,8 @@
 
 
     <!--Titles-->
-    <string name="title_activity_shopping_list">ShoppingListActivity</string>
+    <string name="title_activity_shopping_list">Shopping lists</string>
+    <string name="title_activity_shopping_list_item">Shopping list items</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

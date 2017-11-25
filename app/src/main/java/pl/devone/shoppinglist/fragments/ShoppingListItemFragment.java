@@ -82,7 +82,7 @@ public class ShoppingListItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener));
+            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener, getContext()));
             mRecyclerView = recyclerView;
 
             if (mShoppingList.getItemsCount() == 0) {

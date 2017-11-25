@@ -49,6 +49,8 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         setupActionBar();
+
+        setTitle(R.string.title_activity_shopping_list_item);
     }
 
     @Override

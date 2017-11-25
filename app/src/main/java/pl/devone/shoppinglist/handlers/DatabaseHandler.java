@@ -123,7 +123,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         Log.i(TAG, "Fetched: " + result.size());
 
-
         return result;
     }
 

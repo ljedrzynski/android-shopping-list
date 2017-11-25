@@ -12,6 +12,7 @@ import java.util.List;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListFragment;
+import pl.devone.shoppinglist.handlers.PreferenceHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 import pl.devone.shoppinglist.utils.DateUtils;
@@ -45,7 +46,9 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         ShoppingList shoppingList = mValues.get(position);
         holder.mItem = shoppingList;
         holder.mIdView.setText(String.valueOf(shoppingList.getNo()));
+        holder.mIdView.setTextSize(PreferenceHandler.getCommonFontSize(mContext));
         holder.mCreateDate.setText(DateUtils.getDateFormat(mContext).format(shoppingList.getCreatedAt()));
+        holder.mCreateDate.setTextSize(PreferenceHandler.getCommonFontSize(mContext));
         holder.mDone.setVisibility(shoppingList.isDone() ? View.VISIBLE : View.INVISIBLE);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
