@@ -25,14 +25,10 @@ import java.util.List;
 public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<ShoppingListItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
-    private final Context mContext;
     private boolean save = false;
 
-    public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items, OnListFragmentInteractionListener listener, Context context) {
+    public ShoppingListItemRecyclerViewAdapter(List<ShoppingListItem> items) {
         mValues = items;
-        mListener = listener;
-        mContext = context;
     }
 
     @Override
@@ -51,7 +47,6 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ShoppingListItem shoppingListItem = mValues.get(position);
         holder.setItem(shoppingListItem);
-        holder.changeFontSize(PreferenceHandler.getCommonFontSize(mContext));
 
         if (save) {
             holder.forceSave();
@@ -147,17 +142,6 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
                     }
                 }
             };
-        }
-
-        public void changeFontSize(int size) {
-            mIdView.setTextSize(size);
-            mDoneCb.setTextSize(size);
-            mNameView.setTextSize(size);
-            mQuantityView.setTextSize(size);
-            mPriceView.setTextSize(size);
-            mNameEditView.setTextSize(size);
-            mQuantityEditView.setTextSize(size);
-            mPriceEditView.setTextSize(size);
         }
 
         private void initListeners() {

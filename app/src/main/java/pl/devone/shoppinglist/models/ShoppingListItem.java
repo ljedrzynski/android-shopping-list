@@ -12,16 +12,6 @@ public class ShoppingListItem {
     public ShoppingListItem() {
     }
 
-    public ShoppingListItem(long id, int no, String name, int quantity, double price, boolean isDone, ShoppingList shoppingList) {
-        this.id = id;
-        this.no = no;
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
-        this.isDone = isDone;
-        this.shoppingList = shoppingList;
-    }
-
     public ShoppingList getShoppingList() {
         return shoppingList;
     }

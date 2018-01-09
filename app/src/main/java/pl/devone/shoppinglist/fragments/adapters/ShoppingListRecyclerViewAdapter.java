@@ -46,16 +46,12 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         ShoppingList shoppingList = mValues.get(position);
         holder.mItem = shoppingList;
         holder.mIdView.setText(String.valueOf(shoppingList.getNo()));
-        holder.mIdView.setTextSize(PreferenceHandler.getCommonFontSize(mContext));
         holder.mCreateDate.setText(DateUtils.getDateFormat(mContext).format(shoppingList.getCreatedAt()));
-        holder.mCreateDate.setTextSize(PreferenceHandler.getCommonFontSize(mContext));
         holder.mDone.setVisibility(shoppingList.isDone() ? View.VISIBLE : View.INVISIBLE);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
             }

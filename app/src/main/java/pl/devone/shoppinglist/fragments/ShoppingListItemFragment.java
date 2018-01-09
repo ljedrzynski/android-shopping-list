@@ -76,20 +76,20 @@ public class ShoppingListItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.shopping_item_list, container, false);
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
+
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems(), mListener, getContext()));
+            recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems()));
             mRecyclerView = recyclerView;
 
             if (mShoppingList.getItemsCount() == 0) {
                 addNewItem();
             }
         }
-
         return view;
     }
 

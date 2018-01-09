@@ -26,11 +26,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "shoppingList";
     private static final String TABLE_SHOPPING_LIST = "shopping_list";
 
-//    @Override
-//    public void onOpen(SQLiteDatabase db) {
-//        truncateTables();
-//    }
-
     private static final String TABLE_SHOPPING_LIST_ITEM = "shopping_list_item";
 
     // Contacts Table Columns names

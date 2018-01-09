@@ -43,7 +43,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
-
                 preference.setSummary(
                         index >= 0
                                 ? listPreference.getEntries()[index]
@@ -155,7 +154,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToBooleanValue(findPreference("remove_done_shopping_list"));
-            bindPreferenceSummaryToStringValue(findPreference("font_size"));
         }
 
         @Override
