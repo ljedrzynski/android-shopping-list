@@ -1,6 +1,5 @@
 package pl.devone.shoppinglist.fragments.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.ShoppingListItemFragment.OnListFragmentInteractionListener;
-import pl.devone.shoppinglist.handlers.PreferenceHandler;
 import pl.devone.shoppinglist.models.ShoppingListItem;
 
 import java.util.List;

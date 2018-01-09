@@ -2,6 +2,7 @@ package pl.devone.shoppinglist.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,15 +11,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.adapters.ShoppingListItemRecyclerViewAdapter;
-import pl.devone.shoppinglist.handlers.DatabaseHandler;
+import pl.devone.shoppinglist.handlers.FirebaseHandler;
 import pl.devone.shoppinglist.handlers.PreferenceHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 import pl.devone.shoppinglist.models.ShoppingListItem;
+import pl.devone.shoppinglist.utils.DateUtils;
 
 /**
  * A fragment representing a list of Items.
@@ -28,21 +36,16 @@ import pl.devone.shoppinglist.models.ShoppingListItem;
  */
 public class ShoppingListItemFragment extends Fragment {
 
+    private final static String TAG = ShoppingListItemFragment.class.getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private ShoppingList mShoppingList;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ShoppingListItemFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ShoppingListItemFragment newInstance(int columnCount) {
         ShoppingListItemFragment fragment = new ShoppingListItemFragment();
         Bundle args = new Bundle();
@@ -61,11 +64,9 @@ public class ShoppingListItemFragment extends Fragment {
         }
 
         mShoppingList = (ShoppingList) getActivity().getIntent().getSerializableExtra("shopping_list");
-        if (mShoppingList != null && mShoppingList.getId() > 0) {
-            mShoppingList.setItems(DatabaseHandler.getHandler(getContext()).getShoppingListItems(mShoppingList));
-        } else {
+        if (mShoppingList == null) {
             mShoppingList = new ShoppingList();
-            mShoppingList.setCreatedAt(new Date());
+            mShoppingList.setCreatedAt(DateUtils.formatDateToString(new Date(), getContext()));
             mShoppingList.setItems(new ArrayList<ShoppingListItem>());
         }
     }
@@ -95,21 +96,40 @@ public class ShoppingListItemFragment extends Fragment {
 
     public void addNewItem() {
         ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+
         ShoppingListItem shoppingListItem = new ShoppingListItem();
         shoppingListItem.setNo(mShoppingList.getItemsCount() + 1);
         shoppingListItem.setShoppingList(mShoppingList);
         mShoppingList.getItems().add(shoppingListItem);
+
         adapter.notifyDataSetChanged();
     }
 
     public void save() {
-        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+        final ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+
+        OnCompleteListener<Void> onCompleteListener = new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                adapter.notifyDataSetSaved();
+            }
+        };
+
         if (PreferenceHandler.isAutoDeleteMode(getContext()) && mShoppingList.allItemsDone()) {
-            DatabaseHandler.getHandler(getContext()).deleteShoppingList(mShoppingList);
+            FirebaseHandler.getRef("shoppingLists")
+                    .child(String.valueOf(mShoppingList.getUid()))
+                    .removeValue()
+                    .addOnCompleteListener(onCompleteListener);
         } else {
-            DatabaseHandler.getHandler(getContext()).saveShoppingList(mShoppingList);
+            DatabaseReference databaseReference = FirebaseHandler.getRef("shoppingLists");
+            if(mShoppingList.getUid() == null) {
+                mShoppingList.setUid(databaseReference.push().getKey());
+            }
+            Map<String, Object> userUpdates = new HashMap<>();
+            userUpdates.put(String.valueOf(mShoppingList.getUid()), mShoppingList);
+            FirebaseHandler.getRef("shoppingLists").updateChildren(userUpdates)
+                    .addOnCompleteListener(onCompleteListener);
         }
-        adapter.notifyDataSetSaved();
     }
 
     @Override

@@ -6,15 +6,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import pl.devone.shoppinglist.R;
 import pl.devone.shoppinglist.fragments.adapters.ShoppingListRecyclerViewAdapter;
-import pl.devone.shoppinglist.handlers.DatabaseHandler;
+import pl.devone.shoppinglist.handlers.FirebaseHandler;
 import pl.devone.shoppinglist.models.ShoppingList;
 
 /**
@@ -25,6 +32,7 @@ import pl.devone.shoppinglist.models.ShoppingList;
  */
 public class ShoppingListFragment extends Fragment {
 
+    private final static String TAG = ShoppingListFragment.class.getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -60,7 +68,7 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getData();
+        initData();
     }
 
     @Override
@@ -70,35 +78,48 @@ public class ShoppingListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             mRecyclerView = (RecyclerView) view;
         }
-        initRecyclerView();
-
+        initData();
         return view;
     }
 
     private void initRecyclerView() {
-        getData();
         Context context = mRecyclerView.getContext();
         if (mColumnCount <= 1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
             mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-
         mRecyclerView.setAdapter(new ShoppingListRecyclerViewAdapter(context, mShoppingLists, mListener));
     }
 
-    private void getData() {
-        List<ShoppingList> shoppingLists = DatabaseHandler.getHandler(this.getContext()).getShoppingLists();
-        if (mShoppingLists == null) {
-            mShoppingLists = shoppingLists;
-        } else {
-            mShoppingLists.clear();
-            mShoppingLists.addAll(shoppingLists);
-            for (int i = 0; i < mShoppingLists.size(); i++) {
-                mShoppingLists.get(i).setNo(i + 1);
-            }
-            mRecyclerView.getAdapter().notifyDataSetChanged();
-        }
+    private void initData() {
+        FirebaseHandler.getRef("shoppingLists")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final List<ShoppingList> shoppingLists = new ArrayList<>();
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            shoppingLists.add((postSnapshot.getValue(ShoppingList.class)));
+                        }
+                        if (mShoppingLists == null) {
+                            mShoppingLists = shoppingLists;
+                        } else {
+                            mShoppingLists.clear();
+                            mShoppingLists.addAll(shoppingLists);
+                            for (int i = 0; i < mShoppingLists.size(); i++) {
+                                mShoppingLists.get(i).setNo(i + 1);
+                            }
+                            initRecyclerView();
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.i(TAG, "The read failed " + databaseError.getCode());
+                    }
+                });
+
     }
 
 

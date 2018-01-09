@@ -1,7 +1,8 @@
 package pl.devone.shoppinglist.models;
 
-public class ShoppingListItem {
-    private long id;
+import java.io.Serializable;
+
+public class ShoppingListItem implements Serializable {
     private int no;
     private String name;
     private int quantity;
@@ -10,18 +11,6 @@ public class ShoppingListItem {
     private ShoppingList shoppingList;
 
     public ShoppingListItem() {
-    }
-
-    public ShoppingList getShoppingList() {
-        return shoppingList;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -56,10 +45,6 @@ public class ShoppingListItem {
         isDone = done;
     }
 
-    public boolean isTransient() {
-        return id == 0;
-    }
-
     public void setShoppingList(ShoppingList shoppingList) {
         this.shoppingList = shoppingList;
     }
@@ -72,7 +57,6 @@ public class ShoppingListItem {
         this.no = no;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +64,6 @@ public class ShoppingListItem {
 
         ShoppingListItem that = (ShoppingListItem) o;
 
-        if (id != that.id) return false;
         if (no != that.no) return false;
         if (quantity != that.quantity) return false;
         if (Double.compare(that.price, price) != 0) return false;
@@ -93,8 +76,7 @@ public class ShoppingListItem {
     public int hashCode() {
         int result;
         long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + no;
+        result = no;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + quantity;
         temp = Double.doubleToLongBits(price);
@@ -102,17 +84,5 @@ public class ShoppingListItem {
         result = 31 * result + (isDone ? 1 : 0);
         result = 31 * result + (shoppingList != null ? shoppingList.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ShoppingListItem{" +
-                "id=" + id +
-                ", no=" + no +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", isDone=" + isDone +
-                '}';
     }
 }

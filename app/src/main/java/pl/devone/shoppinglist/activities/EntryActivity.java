@@ -37,6 +37,9 @@ public class EntryActivity extends AppCompatActivity implements ShoppingListFrag
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EntryActivity.this, ShoppingListActivity.class);
+//                ShoppingList shoppingList = new ShoppingList();
+//                shoppingList.setUid(mShoppingListFragment.getShoppingLists().size() + 1);
+//                intent.putExtra("shopping_list", shoppingList);
                 startActivity(intent);
             }
         });

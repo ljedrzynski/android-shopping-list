@@ -67,150 +67,150 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_LIST);
         onCreate(db);
     }
-
-    public List<ShoppingList> getShoppingLists() {
-        Log.i(TAG, "Fetching shoppingLists from database");
-        List<ShoppingList> result = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST, null)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    ShoppingList shoppingList = new ShoppingList();
-                    shoppingList.setId(cursor.getInt(0));
-                    shoppingList.setNo(cursor.getInt(1));
-                    shoppingList.setCreatedAt(DateUtils.formatStringToDate(cursor.getString(2), mContext));
-                    shoppingList.setDone(cursor.getInt(3) == 1);
-                    result.add(shoppingList);
-                } while (cursor.moveToNext());
-            }
-
-            Log.i(TAG, "Fetched: " + result.size());
-
-        }
-        return result;
-    }
-
-    public List<ShoppingListItem> getShoppingListItems(ShoppingList shoppingList) {
-        if (shoppingList == null || shoppingList.getId() == 0) {
-            throw new RuntimeException("Shopping list cannot be null/empty");
-        }
-        List<ShoppingListItem> result = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Log.i(TAG, "Fetching items for shoppingList with id:" + shoppingList.getId() + " from database");
-
-        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM + " WHERE " + FKEY_SHOPPING_LIST_ID + "=" + shoppingList.getId(), null)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    ShoppingListItem shoppingListItem = new ShoppingListItem();
-                    shoppingListItem.setId(cursor.getInt(0));
-                    shoppingListItem.setNo(cursor.getInt(1));
-                    shoppingListItem.setName(cursor.getString(2));
-                    shoppingListItem.setQuantity(cursor.getInt(3));
-                    shoppingListItem.setPrice(cursor.getInt(4));
-                    shoppingListItem.setDone(cursor.getInt(5) == 1);
-                    shoppingListItem.setShoppingList(shoppingList);
-                    result.add(shoppingListItem);
-                } while (cursor.moveToNext());
-            }
-
-        }
-        Log.i(TAG, "Fetched: " + result.size());
-
-        return result;
-    }
-
-    public void saveShoppingList(ShoppingList shoppingList) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.beginTransaction();
-        try {
-            Log.i(TAG, "Saving shoppingList: " + shoppingList.toString());
-
-            ContentValues values = new ContentValues();
-            if (shoppingList.getId() != 0) {
-                values.put(KEY_ID, shoppingList.getId());
-            }
-            values.put(COL_CREATED_AT, DateUtils.formatDateToString(shoppingList.getCreatedAt(), mContext));
-            values.put(COL_DONE, shoppingList.allItemsDone());
-
-            long resId = db.insertWithOnConflict(TABLE_SHOPPING_LIST, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-
-            if (resId > 0) {
-                shoppingList.setId(resId);
-                if (shoppingList.getItems() != null) {
-                    for (ShoppingListItem shoppingListItem : shoppingList.getItems()) {
-                        saveShoppingListItem(shoppingListItem, shoppingList, db);
-                    }
-                }
-            }
-
-            db.setTransactionSuccessful();
-            Log.i(TAG, "Saved with success");
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-    }
-
-    public void deleteShoppingList(ShoppingList shoppingList) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.beginTransaction();
-        try {
-            Log.i(TAG, "Deleting shoppingList: " + shoppingList.toString());
-
-            if (shoppingList.getItems() != null) {
-                for (ShoppingListItem shoppingListItem : shoppingList.getItems()) {
-                    deleteShoppingListItem(shoppingListItem, db);
-                }
-            }
-
-            db.delete(TABLE_SHOPPING_LIST, KEY_ID + "=" + shoppingList.getId(), null);
-
-            db.setTransactionSuccessful();
-            Log.i(TAG, "Deleted with success");
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-    }
-
-    private void deleteShoppingListItem(ShoppingListItem shoppingListItem, SQLiteDatabase db) {
-        if (db == null) {
-            throw new RuntimeException("SQLiteDatabase object is null");
-        }
-        Log.i(TAG, "Deleting shoppingListItem: " + shoppingListItem.toString());
-
-        db.delete(TABLE_SHOPPING_LIST_ITEM, KEY_ID + "=" + shoppingListItem.getId(), null);
-
-        Log.i(TAG, "Deleted with success");
-    }
-
-    private void saveShoppingListItem(ShoppingListItem shoppingListItem, ShoppingList shoppingList, SQLiteDatabase db) {
-        if (db == null) {
-            throw new RuntimeException("SQLiteDatabase object is null");
-        }
-        Log.i(TAG, "Saving shoppingListItem: " + shoppingListItem.toString());
-
-        ContentValues values = new ContentValues();
-        if (shoppingListItem.getId() != 0) {
-            values.put(KEY_ID, shoppingListItem.getId());
-        }
-        values.put(COL_NO, shoppingListItem.getNo());
-        values.put(COL_NAME, shoppingListItem.getName());
-        values.put(COL_QUANTITY, shoppingListItem.getQuantity());
-        values.put(COL_PRICE, shoppingListItem.getPrice());
-        values.put(COL_DONE, shoppingListItem.isDone());
-        values.put(FKEY_SHOPPING_LIST_ID, shoppingList.getId());
-
-        Long resId = db.insertWithOnConflict(TABLE_SHOPPING_LIST_ITEM, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-
-        if (resId > 0) {
-            shoppingListItem.setId(resId);
-        }
-
-        Log.i(TAG, "Saved with success");
-    }
+//
+//    public List<ShoppingList> getShoppingLists() {
+//        Log.i(TAG, "Fetching shoppingLists from database");
+//        List<ShoppingList> result = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST, null)) {
+//            if (cursor.moveToFirst()) {
+//                do {
+//                    ShoppingList shoppingList = new ShoppingList();
+//                    shoppingList.setUid(cursor.getInt(0));
+//                    shoppingList.setNo(cursor.getInt(1));
+//                    shoppingList.setCreatedAt(DateUtils.formatStringToDate(cursor.getString(2), mContext));
+//                    shoppingList.setDone(cursor.getInt(3) == 1);
+//                    result.add(shoppingList);
+//                } while (cursor.moveToNext());
+//            }
+//
+//            Log.i(TAG, "Fetched: " + result.size());
+//
+//        }
+//        return result;
+//    }
+//
+//    public List<ShoppingListItem> getShoppingListItems(ShoppingList shoppingList) {
+//        if (shoppingList == null || shoppingList.getUid() == 0) {
+//            throw new RuntimeException("Shopping list cannot be null/empty");
+//        }
+//        List<ShoppingListItem> result = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        Log.i(TAG, "Fetching items for shoppingList with id:" + shoppingList.getUid() + " from database");
+//
+//        try (Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM + " WHERE " + FKEY_SHOPPING_LIST_ID + "=" + shoppingList.getUid(), null)) {
+//            if (cursor.moveToFirst()) {
+//                do {
+//                    ShoppingListItem shoppingListItem = new ShoppingListItem();
+//                    shoppingListItem.setUid(cursor.getInt(0));
+//                    shoppingListItem.setNo(cursor.getInt(1));
+//                    shoppingListItem.setName(cursor.getString(2));
+//                    shoppingListItem.setQuantity(cursor.getInt(3));
+//                    shoppingListItem.setPrice(cursor.getInt(4));
+//                    shoppingListItem.setDone(cursor.getInt(5) == 1);
+//                    shoppingListItem.setShoppingList(shoppingList);
+//                    result.add(shoppingListItem);
+//                } while (cursor.moveToNext());
+//            }
+//
+//        }
+//        Log.i(TAG, "Fetched: " + result.size());
+//
+//        return result;
+//    }
+//
+//    public void saveShoppingList(ShoppingList shoppingList) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        db.beginTransaction();
+//        try {
+//            Log.i(TAG, "Saving shoppingList: " + shoppingList.toString());
+//
+//            ContentValues values = new ContentValues();
+//            if (shoppingList.getUid() != 0) {
+//                values.put(KEY_ID, shoppingList.getUid());
+//            }
+//            values.put(COL_CREATED_AT, DateUtils.formatDateToString(shoppingList.getCreatedAt(), mContext));
+//            values.put(COL_DONE, shoppingList.allItemsDone());
+//
+//            long resId = db.insertWithOnConflict(TABLE_SHOPPING_LIST, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//
+//            if (resId > 0) {
+//                shoppingList.setUid(resId);
+//                if (shoppingList.getItems() != null) {
+//                    for (ShoppingListItem shoppingListItem : shoppingList.getItems()) {
+//                        saveShoppingListItem(shoppingListItem, shoppingList, db);
+//                    }
+//                }
+//            }
+//
+//            db.setTransactionSuccessful();
+//            Log.i(TAG, "Saved with success");
+//        } finally {
+//            db.endTransaction();
+//            db.close();
+//        }
+//    }
+//
+//    public void deleteShoppingList(ShoppingList shoppingList) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        db.beginTransaction();
+//        try {
+//            Log.i(TAG, "Deleting shoppingList: " + shoppingList.toString());
+//
+//            if (shoppingList.getItems() != null) {
+//                for (ShoppingListItem shoppingListItem : shoppingList.getItems()) {
+//                    deleteShoppingListItem(shoppingListItem, db);
+//                }
+//            }
+//
+//            db.delete(TABLE_SHOPPING_LIST, KEY_ID + "=" + shoppingList.getUid(), null);
+//
+//            db.setTransactionSuccessful();
+//            Log.i(TAG, "Deleted with success");
+//        } finally {
+//            db.endTransaction();
+//            db.close();
+//        }
+//    }
+//
+//    private void deleteShoppingListItem(ShoppingListItem shoppingListItem, SQLiteDatabase db) {
+//        if (db == null) {
+//            throw new RuntimeException("SQLiteDatabase object is null");
+//        }
+//        Log.i(TAG, "Deleting shoppingListItem: " + shoppingListItem.toString());
+//
+//        db.delete(TABLE_SHOPPING_LIST_ITEM, KEY_ID + "=" + shoppingListItem.getUid(), null);
+//
+//        Log.i(TAG, "Deleted with success");
+//    }
+//
+//    private void saveShoppingListItem(ShoppingListItem shoppingListItem, ShoppingList shoppingList, SQLiteDatabase db) {
+//        if (db == null) {
+//            throw new RuntimeException("SQLiteDatabase object is null");
+//        }
+//        Log.i(TAG, "Saving shoppingListItem: " + shoppingListItem.toString());
+//
+//        ContentValues values = new ContentValues();
+//        if (shoppingListItem.getUid() != 0) {
+//            values.put(KEY_ID, shoppingListItem.getUid());
+//        }
+//        values.put(COL_NO, shoppingListItem.getNo());
+//        values.put(COL_NAME, shoppingListItem.getName());
+//        values.put(COL_QUANTITY, shoppingListItem.getQuantity());
+//        values.put(COL_PRICE, shoppingListItem.getPrice());
+//        values.put(COL_DONE, shoppingListItem.isDone());
+//        values.put(FKEY_SHOPPING_LIST_ID, shoppingList.getUid());
+//
+//        Long resId = db.insertWithOnConflict(TABLE_SHOPPING_LIST_ITEM, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//
+//        if (resId > 0) {
+//            shoppingListItem.setUid(resId);
+//        }
+//
+//        Log.i(TAG, "Saved with success");
+//    }
 
     public static DatabaseHandler getHandler(Context context) {
         return new DatabaseHandler(context);

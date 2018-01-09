@@ -2,31 +2,24 @@ package pl.devone.shoppinglist.models;
 
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class ShoppingList implements Serializable {
-    private long id;
+    private String uid;
     private int no;
-    private Date createdAt;
+    private String createdAt;
     private List<ShoppingListItem> items;
     private boolean isDone;
 
     public ShoppingList() {
     }
 
-    public ShoppingList(int id, Date createdAt, List<ShoppingListItem> items) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.items = items;
+    public String getUid() {
+        return uid;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public int getNo() {
@@ -37,11 +30,11 @@ public class ShoppingList implements Serializable {
         this.no = no;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -84,9 +77,9 @@ public class ShoppingList implements Serializable {
 
         ShoppingList that = (ShoppingList) o;
 
-        if (id != that.id) return false;
         if (no != that.no) return false;
         if (isDone != that.isDone) return false;
+        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
         if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null)
             return false;
         return items != null ? items.equals(that.items) : that.items == null;
@@ -94,7 +87,7 @@ public class ShoppingList implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = uid != null ? uid.hashCode() : 0;
         result = 31 * result + no;
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + (items != null ? items.hashCode() : 0);
@@ -102,14 +95,5 @@ public class ShoppingList implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "ShoppingList{" +
-                "id=" + id +
-                ", no=" + no +
-                ", createdAt=" + createdAt +
-                ", items=" + items +
-                ", isDone=" + isDone +
-                '}';
-    }
+
 }
