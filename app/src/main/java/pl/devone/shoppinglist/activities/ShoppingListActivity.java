@@ -24,7 +24,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
             switch (item.getItemId()) {
                 case R.id.navigation_add_item:
                     mShoppingListItemFragment.addNewItem();
-                    return true;
+                        return true;
                 case R.id.navigation_save:
                     mShoppingListItemFragment.save();
                     return true;
@@ -58,9 +58,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         super.onDestroy();
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -70,13 +67,13 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        finish();
         mShoppingListItemFragment.save();
+        finish();
         return true;
     }
 
     @Override
     public void onListFragmentInteraction(ShoppingListItem item) {
-
+        //
     }
 }

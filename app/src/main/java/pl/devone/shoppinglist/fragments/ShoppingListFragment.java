@@ -119,9 +119,7 @@ public class ShoppingListFragment extends Fragment {
                         Log.i(TAG, "The read failed " + databaseError.getCode());
                     }
                 });
-
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -138,10 +136,6 @@ public class ShoppingListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public List<ShoppingList> getShoppingLists() {
-        return mShoppingLists;
     }
 
     public interface OnListFragmentInteractionListener {
