@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,14 +53,12 @@ public class ShoppingListItemFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
-
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -87,26 +87,24 @@ public class ShoppingListItemFragment extends Fragment {
             recyclerView.setAdapter(new ShoppingListItemRecyclerViewAdapter(mShoppingList.getItems()));
             mRecyclerView = recyclerView;
 
-            if (mShoppingList.getItemsCount() == 0) {
+            if (CollectionUtils.isEmpty(mShoppingList.getItems())) {
                 addNewItem();
             }
         }
         return view;
     }
 
-    public void addNewItem() {
-        ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
 
+    public void addNewItem() {
         ShoppingListItem shoppingListItem = new ShoppingListItem();
-        shoppingListItem.setNo(mShoppingList.getItemsCount() + 1);
+        shoppingListItem.setNo(mShoppingList.getItems().size() + 1);
         shoppingListItem.setShoppingList(mShoppingList);
         mShoppingList.getItems().add(shoppingListItem);
-        adapter.notifyDataSetChanged();
+        getAdapter().notifyDataSetChanged();
     }
 
     public void save() {
         final ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
-        adapter.notifyDataSetSaved();
 
         OnCompleteListener onCompleteListener = new OnCompleteListener() {
             @Override
@@ -151,17 +149,11 @@ public class ShoppingListItemFragment extends Fragment {
         mListener = null;
     }
 
+    private ShoppingListItemRecyclerViewAdapter getAdapter() {
+        return (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(ShoppingListItem item);
     }

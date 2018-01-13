@@ -42,10 +42,6 @@ public class ShoppingList implements Serializable {
         return items;
     }
 
-    public int getItemsCount() {
-        return items != null ? items.size() : 0;
-    }
-
     public boolean isDone() {
         return isDone;
     }

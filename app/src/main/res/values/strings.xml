@@ -75,7 +75,7 @@
 
     <!--Titles-->
     <string name="title_activity_shopping_list">Shopping lists</string>
-    <string name="title_activity_shopping_list_item">Shopping list items</string>
+    <string name="title_activity_shopping_list_item">Items</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
