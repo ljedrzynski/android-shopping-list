@@ -101,14 +101,14 @@ public class ShoppingListItemFragment extends Fragment {
         shoppingListItem.setNo(mShoppingList.getItemsCount() + 1);
         shoppingListItem.setShoppingList(mShoppingList);
         mShoppingList.getItems().add(shoppingListItem);
-
         adapter.notifyDataSetChanged();
     }
 
     public void save() {
         final ShoppingListItemRecyclerViewAdapter adapter = (ShoppingListItemRecyclerViewAdapter) mRecyclerView.getAdapter();
+        adapter.notifyDataSetSaved();
 
-        OnCompleteListener<Void> onCompleteListener = new OnCompleteListener<Void>() {
+        OnCompleteListener onCompleteListener = new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 adapter.notifyDataSetSaved();
@@ -122,12 +122,14 @@ public class ShoppingListItemFragment extends Fragment {
                     .addOnCompleteListener(onCompleteListener);
         } else {
             DatabaseReference databaseReference = FirebaseHandler.getRef("shoppingLists");
-            if(mShoppingList.getUid() == null) {
+            if (mShoppingList.getUid() == null) {
                 mShoppingList.setUid(databaseReference.push().getKey());
             }
+
             Map<String, Object> userUpdates = new HashMap<>();
             userUpdates.put(String.valueOf(mShoppingList.getUid()), mShoppingList);
-            FirebaseHandler.getRef("shoppingLists").updateChildren(userUpdates)
+            FirebaseHandler.getRef("shoppingLists")
+                    .updateChildren(userUpdates)
                     .addOnCompleteListener(onCompleteListener);
         }
     }

@@ -41,6 +41,8 @@ public class ShoppingListItemRecyclerViewAdapter extends RecyclerView.Adapter<Sh
         this.notifyDataSetChanged();
     }
 
+
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ShoppingListItem shoppingListItem = mValues.get(position);
